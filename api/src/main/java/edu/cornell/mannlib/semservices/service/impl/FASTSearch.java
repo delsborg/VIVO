@@ -1,8 +1,10 @@
 package edu.cornell.mannlib.semservices.service.impl;
 
-import com.hp.hpl.jena.graph.Triple;
-import org.apache.jena.riot.RiotReader;
+/* import com.hp.hpl.jena.graph.Triple; */
+import org.apache.jena.graph.Triple;
+//import org.apache.jena.riot.RiotReader;
 import org.apache.jena.riot.lang.LangRIOT;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDFBase;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -28,7 +30,7 @@ public class FASTSearch {
             final IndexWriter writer = new IndexWriter(idx, new IndexWriterConfig(new StandardAnalyzer()));
 
             InputStream in = FASTSearch.class.getResourceAsStream("FAST-labels.nt");
-            LangRIOT parser = RiotReader.createParserNTriples(in, new StreamRDFBase() {
+            LangRIOT parser = RDFDataMgr.parse(new StreamRDFBase() {
                 @Override
                 public void triple(Triple triple) {
                     try {
@@ -40,7 +42,7 @@ public class FASTSearch {
                         searcher = null;
                     }
                 }
-            });
+            }, in, "N-TRIPLES" );
 
             parser.parse();
 
